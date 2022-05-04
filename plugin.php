@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: SE2 Content Blocks
+ * Plugin Name: SE2 Blocks | Content
  * Plugin URI: https://github.com/ahmadawais/create-guten-block/
  * Description: SE2 Block Section — Show the Custom Post Types for the SimplEvent v2 Wordpress Theme everywhere. Included: Speaker, Events, Companies, Partners
  * Author: Aaron

@@ -75,15 +75,21 @@ function se2_content_blocks_cgb_block_assets() { // phpcs:ignore
 	 * @since 1.16.0
 	 */
 	register_block_type(
-		'cgb/block-se2-content-blocks', array(
+		'cgb/block-se2-speaker', array(
 			// Enqueue blocks.style.build.css on both frontend & backend.
 			'style'         => 'se2_content_blocks-cgb-style-css',
 			// Enqueue blocks.build.js in the editor only.
 			'editor_script' => 'se2_content_blocks-cgb-block-js',
 			// Enqueue blocks.editor.build.css in the editor only.
 			'editor_style'  => 'se2_content_blocks-cgb-block-editor-css',
+
+			'render_callback' => 'simplevent_speaker_render',
 		)
 	);
+}
+
+function simplevent_speaker_render(){
+	return '<div><h1>SPEAKER</h1></div>';
 }
 
 // Hook: Block assets.
