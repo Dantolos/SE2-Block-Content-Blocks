@@ -75,7 +75,7 @@ function se2_content_blocks_cgb_block_assets() { // phpcs:ignore
 	 * @since 1.16.0
 	 */
 	register_block_type(
-		'cgb/block-se2-speaker', array(
+		'se2/block-speaker', array(
 			// Enqueue blocks.style.build.css on both frontend & backend.
 			'style'         => 'se2_content_blocks-cgb-style-css',
 			// Enqueue blocks.build.js in the editor only.
@@ -86,10 +86,48 @@ function se2_content_blocks_cgb_block_assets() { // phpcs:ignore
 			'render_callback' => 'simplevent_speaker_render',
 		)
 	);
+
+	register_block_type(
+		'se2/block-events', array(
+			// Enqueue blocks.style.build.css on both frontend & backend.
+			'style'         => 'se2_content_blocks-cgb-style-css',
+			// Enqueue blocks.build.js in the editor only.
+			'editor_script' => 'se2_content_blocks-cgb-block-js',
+			// Enqueue blocks.editor.build.css in the editor only.
+			'editor_style'  => 'se2_content_blocks-cgb-block-editor-css',
+
+			'render_callback' => 'simplevent_events_render',
+		)
+	);
 }
 
-function simplevent_speaker_render(){
-	return '<div><h1>SPEAKER</h1></div>';
+function simplevent_speaker_render($selectedSpeaker){
+	$speakerCard = '';
+	
+	
+	if( $selectedSpeaker['selectedSpeaker'] ){
+		$speakerID = $selectedSpeaker['selectedSpeaker'];
+		$speakerCard .= '<div class="speaker-card speaker-lb-trigger" data-speakerid="'.$speakerID.'">';
+			
+				
+				$speakerName = get_field('speaker_vorname', $speakerID). ' ' .get_field('speaker_nachname', $speakerID);
+				$speakerFunktion = get_field('speaker_firma', $speakerID);
+
+				$speakerCard .= '<div>';
+				$speakerCard .= '<div class="speaker-image" style="background-image: url(' .get_field('speaker_bild', $speakerID) .');"></div>';
+				$speakerCard .= '<h5>'.$speakerName.'</h5>';
+				$speakerCard .= '<p>'.$speakerFunktion.'</p>';
+				$speakerCard .= '</div>';
+			
+		$speakerCard .= '</div>';
+	}
+
+	return $speakerCard;
+
+}
+
+function simplevent_events_render(){
+	return true;
 }
 
 // Hook: Block assets.
