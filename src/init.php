@@ -153,7 +153,7 @@ function simplevent_events_render( $selectedEvent ){
 			$eventCard .= '<p>'. substr( $introtext, 0, $introtext_length ).'</p>';
 			$eventCard .= '<div class="event-card-buttons">';
 				$eventCard .= '<div class="se2-btn-m event-card-button-more" postid="'.$eventID.'" lb="event_lightbox">'.__('mehr', 'SimplEvent').'</div>';
-				if( $selectedEvent['allEventLink']['url'] ){
+				if( isset($selectedEvent['allEventLink']['url'] )){
 					$hide = true;
 					if( isset($selectedEvent['allEventLink']['buttonHidden']) ){
 						$hide = (!$selectedEvent['allEventLink']['buttonHidden'] === true) ? true : false;
