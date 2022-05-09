@@ -26,7 +26,9 @@ export default class EventCard extends Component {
             <div class="event-card">
                 {this.state.eventdata &&
                     <div class="event-card-fragment">
-                        <div class="event-keyvisual" style={{ backgroundImage: `url( ${this.state.eventdata.acf.keyvisual} )` }}></div>
+                        {this.state.eventdata.acf.keyvisual &&
+                            <div class="event-keyvisual" style={{ backgroundImage: `url( ${this.state.eventdata.acf.keyvisual} )` }}></div>
+                        }
                         <h3>{this.state.eventdata.acf.titel}</h3>
                         <p>{this.eventContent()}</p>
                         <div class="event-card-buttons">
