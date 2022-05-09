@@ -13,10 +13,10 @@
 .wp-block-se2-block-speaker {
   position: relative;
   min-height: 200px; }
-  .wp-block-se2-block-speaker:hover .speaker-backend-settings {
+  .wp-block-se2-block-speaker:hover .se2-block-backend-settings {
     opacity: 1;
     top: 20px; }
-  .wp-block-se2-block-speaker .speaker-backend-settings {
+  .wp-block-se2-block-speaker .se2-block-backend-settings {
     opacity: 0;
     width: 80%;
     background-color: white;
@@ -28,10 +28,10 @@
     top: -20px;
     right: 0;
     left: 0; }
-    .wp-block-se2-block-speaker .speaker-backend-settings .speaker-selection:hover {
+    .wp-block-se2-block-speaker .se2-block-backend-settings .se2-block-selection:hover {
       opacity: 1; }
 
-.speaker-backend-msg {
+.se2-block-backend-msg {
   width: 100%;
   min-height: 200px;
   background-color: rgba(193, 193, 193, 0.2);
@@ -45,7 +45,7 @@
   -ms-flex-direction: column;
       flex-direction: column;
   padding: 10%; }
-  .speaker-backend-msg .speaker-image-placeholder {
+  .se2-block-backend-msg .speaker-image-placeholder {
     background-color: #828282;
     width: 150px;
     height: 150px;
@@ -66,10 +66,10 @@
 .wp-block-se2-block-events {
   position: relative;
   min-height: 200px; }
-  .wp-block-se2-block-events:hover .speaker-backend-settings {
+  .wp-block-se2-block-events:hover .se2-block-backend-settings {
     opacity: 1;
     top: 20px; }
-  .wp-block-se2-block-events .speaker-backend-settings {
+  .wp-block-se2-block-events .se2-block-backend-settings {
     opacity: 0;
     width: 80%;
     background-color: white;
@@ -81,5 +81,5 @@
     top: -20px;
     right: 0;
     left: 0; }
-    .wp-block-se2-block-events .speaker-backend-settings .speaker-selection:hover {
+    .wp-block-se2-block-events .se2-block-backend-settings .se2-block-selection:hover {
       opacity: 1; }

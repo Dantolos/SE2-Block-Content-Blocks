@@ -27,6 +27,11 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @uses {wp-editor} for WP editor styles.
  * @since 1.0.0
  */
+
+require_once 'supports/date.php';
+
+use SE2\Supports\Date;
+
 function se2_content_blocks_cgb_block_assets() { // phpcs:ignore
 	// Register block styles for both frontend + backend.
 	wp_register_style(
@@ -126,8 +131,37 @@ function simplevent_speaker_render($selectedSpeaker){
 
 }
 
-function simplevent_events_render(){
-	return true;
+function simplevent_events_render( $selectedEvent ){
+	$eventCard = '';
+	if( $selectedEvent['selectedEvent'] ){
+		$eventID = $selectedEvent['selectedEvent'];
+
+		$introtext = get_field( 'content', $eventID );
+               
+		$introtext = str_replace( '<h3>', '<b>', $introtext ); 
+		$introtext = str_replace( '</h3>', '</b><br />', $introtext ); 
+		$introtext = str_replace( '<i>', '', $introtext ); 
+		$introtext = str_replace( '</i>', '', $introtext ); 
+		$tagEliminations = array("<p>", "</p>", '<div>', '</div>');
+		$introtext = str_replace( $tagEliminations, '', $introtext ); 
+		$introtext_length = strpos( $introtext , '.', 200 ) + 1;
+		
+		$eventCard .= '<div class="event-card ">';
+			$eventCard .= '<div class="event-keyvisual" style="background-image: url(' .get_field('keyvisual', $eventID) .');"></div>';
+			$eventCard .= '<h3>'.get_field('titel', $eventID).'</h3>';
+			$eventCard .= '<h5>'.SE2\Supports\Date\Date_Format::formating_Date_Language(get_field('eckdaten', $eventID)['date'], 'date').'</h5>';
+			$eventCard .= '<p>'. substr( $introtext, 0, $introtext_length ).'</p>';
+			$eventCard .= '<div class="event-card-buttons">';
+				$eventCard .= '<div class="se2-btn-m event-card-button-more" postid="'.$eventID.'" lb="event_lightbox">'.__('mehr', 'SimplEvent').'</div>';
+				if( $selectedEvent['allEventLink']['url'] && !$selectedEvent['allEventLink']['buttonHidden'] === true){
+					$target = $selectedEvent['allEventLink']['opensInNewTab'] ? '_blank' : '';
+					$eventCard .= '<a href="'.$selectedEvent['allEventLink']['url'].'" target="'.$target.'" class="se2-btn-m secondary-btn event-card-button-events">'.__('alle Events', 'SimplEvent').'</a>';
+				}
+			$eventCard .= '</div>';
+		$eventCard .= '</div>';
+	}
+
+	return $eventCard;
 }
 
 // Hook: Block assets.
