@@ -57,7 +57,7 @@ registerBlockType('se2/block-speaker', {
 		//speaker fetching
 		if (!props.attributes.speakers) {
 			wp.apiFetch({
-				url: '/SimplEvent_v2/wp-json/wp/v2/speakers?per_page=-1'
+				url: '/wp-json/wp/v2/speakers?per_page=-1'
 			}).then(speakers => {
 				props.setAttributes({
 					speakers: speakers

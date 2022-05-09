@@ -56,7 +56,7 @@ registerBlockType('se2/block-events', {
 		//event fetching
 		if (!props.attributes.events) {
 			wp.apiFetch({
-				url: '/SimplEvent_v2/wp-json/wp/v2/event?per_page=-1'
+				url: '/wp-json/wp/v2/event?per_page=-1'
 			}).then(events => {
 				props.setAttributes({
 					events: events
