@@ -153,9 +153,15 @@ function simplevent_events_render( $selectedEvent ){
 			$eventCard .= '<p>'. substr( $introtext, 0, $introtext_length ).'</p>';
 			$eventCard .= '<div class="event-card-buttons">';
 				$eventCard .= '<div class="se2-btn-m event-card-button-more" postid="'.$eventID.'" lb="event_lightbox">'.__('mehr', 'SimplEvent').'</div>';
-				if( $selectedEvent['allEventLink']['url'] && !$selectedEvent['allEventLink']['buttonHidden'] === true){
-					$target = $selectedEvent['allEventLink']['opensInNewTab'] ? '_blank' : '';
-					$eventCard .= '<a href="'.$selectedEvent['allEventLink']['url'].'" target="'.$target.'" class="se2-btn-m secondary-btn event-card-button-events">'.__('alle Events', 'SimplEvent').'</a>';
+				if( $selectedEvent['allEventLink']['url'] ){
+					$hide = true;
+					if( isset($selectedEvent['allEventLink']['buttonHidden']) ){
+						$hide = (!$selectedEvent['allEventLink']['buttonHidden'] === true) ? true : false;
+					}
+					if($hide){
+						$target = $selectedEvent['allEventLink']['opensInNewTab'] ? '_blank' : '';
+						$eventCard .= '<a href="'.$selectedEvent['allEventLink']['url'].'" target="'.$target.'" class="se2-btn-m secondary-btn event-card-button-events">'.__('alle Events', 'SimplEvent').'</a>';
+					}
 				}
 			$eventCard .= '</div>';
 		$eventCard .= '</div>';
