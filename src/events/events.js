@@ -11,11 +11,19 @@ import './style.scss';
 
 const { __ } = wp.i18n; // Import __() from wp.i18n
 const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.blocks
+const { __experimentalLinkControl: LinkControl } = wp.blockEditor;
+import { Panel, PanelBody, PanelRow, PanelHeader } from '@wordpress/components';
+import {
+	useBlockProps,
+	ColorPalette,
+	InspectorControls,
+} from '@wordpress/block-editor';
+
 import EventCard from './event-card';
 
 
 registerBlockType('se2/block-events', {
-	title: __('Event (dyn)'), 
+	title: __('Event (dyn)'),
 	icon: {
 		background: 'rgba(0, 0, 0, 0)',
 		foreground: '#00f692',
@@ -25,8 +33,8 @@ registerBlockType('se2/block-events', {
 			<path d="M951,622v-0.4c-0.1,0-0.2-0.1-0.2-0.1C950.8,621.6,950.9,621.8,951,622z" />
 		</svg>,
 	},
-	category: 'se2', 
-	keywords: [ 'se2', 'events', 'labs'	],
+	category: 'se2',
+	keywords: ['se2', 'events', 'labs'],
 	attributes: {
 		events: {
 			type: 'object',
@@ -36,11 +44,15 @@ registerBlockType('se2/block-events', {
 		},
 		eventDataTrans: {
 			type: 'object'
+		},
+		allEventLink: {
+			type: 'object',
+
 		}
 	},
 
 	edit: (props) => {
-		
+
 		//event fetching
 		if (!props.attributes.events) {
 			wp.apiFetch({
@@ -49,21 +61,21 @@ registerBlockType('se2/block-events', {
 				props.setAttributes({
 					events: events
 				})
-				
+
 			})
 		}
 
 		//fetching fallbacks
 		if (!props.attributes.events) {
 			return message(' Loading ...');
-			
+
 		}
 		if (props.attributes.events && props.attributes.events.length === 0) {
 			return 'No events found!';
 		}
 
 		function updateEvent(e) {
-			var eventData = props.attributes.events.find( event => {
+			var eventData = props.attributes.events.find(event => {
 				return event.id == e.target.value
 			})
 			props.setAttributes({
@@ -74,9 +86,9 @@ registerBlockType('se2/block-events', {
 			})
 		}
 
-		function message(msg){
+		function message(msg) {
 			return (
-				<div class="speaker-backend-msg">
+				<div class="se2-block-backend-msg">
 					{/* <div class="speaker-image-placeholder"></div> */}
 					<h6>{msg}</h6>
 				</div>
@@ -85,8 +97,40 @@ registerBlockType('se2/block-events', {
 
 		return (
 			<div className={props.className}>
-				<div class="speaker-backend-settings">
-					<select class="speaker-selection" onChange={updateEvent} value={props.attributes.selectedEvent}>
+				<div {...useBlockProps()}>
+					<InspectorControls>
+						<Panel header="Link" >
+							<PanelHeader>Link</PanelHeader>
+
+							<PanelBody
+								title="My Block Settings"
+
+								initialOpen={true}
+								onToggle={(e) => console.log("toggled", e)}
+							><p>Link for the "all Events"-Button</p>
+								<LinkControl
+									searchInputPlaceholder="Search here..."
+									value={props.attributes.allEventLink}
+									settings={[
+										{
+											id: 'opensInNewTab',
+											title: 'New tab?',
+										},
+										{
+											id: 'buttonHidden',
+											title: 'Hide the Button to all Events'
+										}
+									]}
+									onChange={(newLink) => props.setAttributes({ allEventLink: newLink })}
+
+								>
+								</LinkControl>
+							</PanelBody>
+						</Panel>
+					</InspectorControls>
+				</div>
+				<div class="se2-block-backend-settings">
+					<select class="se2-block-selection" onChange={updateEvent} value={props.attributes.selectedEvent}>
 						{
 							props.attributes.events.map(event => {
 								return (
@@ -96,7 +140,7 @@ registerBlockType('se2/block-events', {
 						}
 					</select>
 				</div>
-				{ props.attributes.selectedEvent &&
+				{props.attributes.selectedEvent &&
 					<EventCard eventdata={props.attributes.eventDataTrans} />
 				}
 			</div>

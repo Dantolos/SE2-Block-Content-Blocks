@@ -9,12 +9,12 @@
   position:relative;
   min-height:200px;
   &:hover {
-    .speaker-backend-settings {
+    .se2-block-backend-settings {
       opacity: 1;
       top:20px;
     }
   }
-  .speaker-backend-settings {
+  .se2-block-backend-settings {
     opacity: 0;
     width:80%;
     background-color:white;
@@ -25,7 +25,7 @@
     margin: auto;
     top:-20px; right:0; left:0;
 
-    .speaker-selection{
+    .se2-block-selection{
       &:hover {
         
         opacity: 1 ;
@@ -35,7 +35,7 @@
   }
 }
 
-.speaker-backend-msg {
+.se2-block-backend-msg {
   width:100%;
   min-height:200px;
   background-color:rgba(193, 193, 193, .2);
