@@ -11,3 +11,4 @@
 
 import './speaker/speaker.js';
 import './events/events.js';
+import './sessions/session.js';

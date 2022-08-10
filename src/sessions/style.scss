@@ -1,0 +1,23 @@
+/**
+ * #.# Styles
+ *
+ * CSS for both Frontend+Backend.
+ */
+
+.wp-block-cgb-block-se2-content-blocks  {
+    background: $red;
+    border: 0.2rem solid $black;
+    color: $black;
+    margin: 0 auto;
+    max-width: 740px;
+    padding: 2rem;
+}
+.session-card {
+    .session-keyvisual{
+        width:100%;
+        height:80px;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+}

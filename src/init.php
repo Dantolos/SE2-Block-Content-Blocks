@@ -99,6 +99,19 @@ function se2_content_blocks_cgb_block_assets() { // phpcs:ignore
 			'render_callback' => 'simplevent_events_render',
 		)
 	);
+
+	register_block_type(
+		'se2/block-sessions', array(
+			// Enqueue blocks.style.build.css on both frontend & backend.
+			'style'         => 'se2_content_blocks-cgb-style-css',
+			// Enqueue blocks.build.js in the editor only.
+			'editor_script' => 'se2_content_blocks-cgb-block-js',
+			// Enqueue blocks.editor.build.css in the editor only.
+			'editor_style'  => 'se2_content_blocks-cgb-block-editor-css',
+
+			'render_callback' => 'simplevent_session_render',
+		)
+	);
 }
 
 function simplevent_speaker_render($selectedSpeaker){
@@ -127,6 +140,10 @@ function simplevent_speaker_render($selectedSpeaker){
 }
 
 function simplevent_events_render(){
+	return true;
+}
+
+function simplevent_session_render(){
 	return true;
 }
 
