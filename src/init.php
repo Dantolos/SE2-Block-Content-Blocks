@@ -126,15 +126,19 @@ function simplevent_speaker_render($selectedSpeaker){
 	if( $selectedSpeaker['selectedSpeaker'] ){
 		$speakerID = $selectedSpeaker['selectedSpeaker'];
 		$speakerCard .= '<div class="speaker-card speaker-lb-trigger" data-speakerid="'.$speakerID.'">';
-			
-				
+
 				$speakerName = get_field('speaker_vorname', $speakerID). ' ' .get_field('speaker_nachname', $speakerID);
-				$speakerFunktion = get_field('speaker_firma', $speakerID);
+				$speaker_funktion = '';
+				if(get_field('speaker_funktion', $speakerID) && get_field('speaker_firma', $speakerID)){ 
+					$speaker_funktion .= get_field('speaker_funktion', $speakerID) . ', ' . get_field('speaker_firma', $speakerID); 
+				} else {
+					$speaker_funktion .= get_field('speaker_firma', $speakerID);
+				}
 
 				$speakerCard .= '<div>';
 				$speakerCard .= '<div class="speaker-image" style="background-image: url(' .get_field('speaker_bild', $speakerID) .');"></div>';
 				$speakerCard .= '<h5>'.$speakerName.'</h5>';
-				$speakerCard .= '<p>'.$speakerFunktion.'</p>';
+				$speakerCard .= '<p>'.$speaker_funktion .'</p>';
 				$speakerCard .= '</div>';
 			
 		$speakerCard .= '</div>';

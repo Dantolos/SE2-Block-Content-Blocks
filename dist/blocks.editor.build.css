@@ -120,3 +120,19 @@
   border-bottom: solid 20px #00f692; }
   .se2-tab-panel .se2-tab-content {
     border-bottom: solid 1px #0a0a0a; }
+
+.speaker-backend-msg {
+  min-height: 150px;
+  border-radius: 10px;
+  background-color: #f0f0f0;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+      flex-direction: column;
+  -ms-flex-align: center;
+      align-items: center;
+  -ms-flex-pack: distribute;
+      justify-content: space-around; }
+  .speaker-backend-msg h5 {
+    opacity: .6;
+    margin-top: 60px; }

@@ -14,8 +14,8 @@ const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.b
 const {
     RichText,
     InspectorControls,
-    ColorPalette,
-    UnitControl
+    ColorPalette
+    
 } = wp.blockEditor;
 const {
     PanelBody,
@@ -25,11 +25,15 @@ const {
     Button,
     RangeControl,
     GradientPicker,
-    Spinner
+    Spinner,
+    FontSizePicker
 } = wp.components;
 
 
 import SessionCard from './session-card';
+
+import { __experimentalUnitControl as UnitControl } from '@wordpress/components';
+import { __experimentalBoxControl as BoxControl } from '@wordpress/components';
 
 
 registerBlockType('se2/block-session', {
@@ -65,12 +69,20 @@ registerBlockType('se2/block-session', {
         let sessionStyle = props.attributes.sessionStyle ? props.attributes.sessionStyle 
                             : {
                                 image: {
-                                    height: '50px'
+                                    height: '50px',
+                                    borderRadius: { top: 0, right: 0, bottom: 0, left: 0 }
+                                },
+                                content: {
+                                    padding:  { top: 0, right: 0, bottom: 0, left: 0 }
+                                },
+                                title: {
+                                    fontSize:  '' 
                                 }
                             };
-        console.log(sessionStyle)
-        console.log(props.attributes)
+       
         props.setAttributes({sessionStyle: sessionStyle})
+
+        const { attributes } = props;
 		//Session fetching
 		if (!props.attributes.sessions) {
 			wp.apiFetch({
@@ -85,7 +97,7 @@ registerBlockType('se2/block-session', {
 
 		//fetching fallbacks
 		if (!props.attributes.sessions) {
-			return message(' Loading ...');
+			return message('LOADING');
 			
 		}
 		if (props.attributes.sessions && props.attributes.sessions.length === 0) {
@@ -110,18 +122,16 @@ registerBlockType('se2/block-session', {
 				<div class="speaker-backend-msg">
 					{/* <div class="speaker-image-placeholder"></div> */}
                     <Spinner />
-					<h6>{msg}</h6>
+					<h5>{msg}</h5>
 				</div>
 			)
 		}
 
         function changeStyle( target, key, value ) {
-            
             sessionStyle[target][key] = value;          
 			props.setAttributes({
 				sessionStyle: sessionStyle
-			});
-            console.log(props);
+			})
 		}
 
 		return (
@@ -154,18 +164,54 @@ registerBlockType('se2/block-session', {
                                 <div class="se2-tab-content">
                                     
                                     {   /* Appearance */
-                                        tab.name === 'appearance' &&
-                                        
-                                            <PanelBody title={'Image'} initialOpen={false} >
-                                                <UnitControl 
-                                                    style={{width: '25%'}}
-                                                    onChange={ (value) => { this.changeStyle('image', 'height', value )  }} 
-                                                    value={ props.attributes } 
-                                                    label= 'Top'
-                                                    labelPosition= 'top'
-                                                />
-                                        
-                                            </PanelBody>
+                                            tab.name === 'appearance' &&
+                                            <fragment>
+                                                <PanelBody title={'Image'} initialOpen={false} >
+                                                    <UnitControl 
+                                                        label= 'Image Height'
+                                                        value={ props.attributes.sessionStyle.image.height }
+                                                        onChange={ (value) => { changeStyle( 'image', 'height', value )  }} 
+                                                        style={{width: '25%'}}
+                                                        labelPosition= 'top'
+                                                    />
+                                                    <BoxControl 
+                                                        label="Border Radius" 
+                                                        values={props.attributes.sessionStyle.image.borderRadius} 
+                                                        onChange={ (value) => { changeStyle( 'image', 'borderRadius', value )  }}
+                                                        style={{ width: '48%', float: 'left', margin: '10px 1%' }} 
+                                                    />
+
+                                                </PanelBody>
+                                                <PanelBody title={'Content'} initialOpen={false} >
+                                                    
+                                                    <BoxControl 
+                                                        label="Padding" 
+                                                        values={props.attributes.sessionStyle.content.padding} 
+                                                        onChange={ (value) => { changeStyle( 'content', 'padding', value )  }}
+                                                        style={{ width: '48%', float: 'left', margin: '10px 1%' }} 
+                                                    />
+
+                                                    <FontSizePicker
+                                                        fontSizes={[
+                                                            {
+                                                                name: __( 'Small' ),
+                                                                slug: 'small',
+                                                                size: 12,
+                                                            },
+                                                            {
+                                                                name: __( 'Big' ),
+                                                                slug: 'big',
+                                                                size: 26,
+                                                            },
+                                                        ]}
+                                                        value={ props.attributes.sessionStyle.title.fontSize }
+                                                        fallbackFontSize={ 26 }
+                                                        onChange={ (value) => { changeStyle( 'title', 'fontSize', value )  }}
+                                                        withSlider
+                                                    />
+
+                                                </PanelBody>
+                                            </fragment>
                                     }
                                 </div>
                             )
@@ -187,8 +233,9 @@ registerBlockType('se2/block-session', {
                             }
                         </select>
                     </div>
+
                     { props.attributes.selectedSession &&
-                        <SessionCard sessiondata={props.attributes.sessionDataTrans} appaereancestyle={sessionStyle} />
+                        <SessionCard sessiondata={props.attributes.sessionDataTrans} appaereancestyle={props.attributes.sessionStyle} />
                     }
                 </div>
             </div>
