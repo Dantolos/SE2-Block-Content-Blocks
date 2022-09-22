@@ -122,7 +122,6 @@ function se2_content_blocks_cgb_block_assets() { // phpcs:ignore
 function simplevent_speaker_render($selectedSpeaker){
 	$speakerCard = '';
 	
-	
 	if( $selectedSpeaker['selectedSpeaker'] ){
 		$speakerID = $selectedSpeaker['selectedSpeaker'];
 		$speakerCard .= '<div class="speaker-card speaker-lb-trigger" data-speakerid="'.$speakerID.'">';
@@ -137,7 +136,7 @@ function simplevent_speaker_render($selectedSpeaker){
 
 				$speakerCard .= '<div>';
 				$speakerCard .= '<div class="speaker-image" style="background-image: url(' .get_field('speaker_bild', $speakerID) .');"></div>';
-				$speakerCard .= '<h5>'.$speakerName.'</h5>';
+				$speakerCard .= '<h4 style="font-size:1.33rem;"><b>'.$speakerName.'</b></h4>';
 				$speakerCard .= '<p>'.$speaker_funktion .'</p>';
 				$speakerCard .= '</div>';
 			

@@ -4,7 +4,7 @@
  * Plugin URI: https://github.com/ahmadawais/create-guten-block/
  * Description: SE2 Block Section — Show the Custom Post Types for the SimplEvent v2 Wordpress Theme everywhere. Included: Speaker, Events, Companies, Partners
  * Author: Aaron
- * Version: 1.0.6
+ * Version: 1.0.7
  * License: GPL2+
  * License URI: https://www.gnu.org/licenses/gpl-2.0.txt
  *
