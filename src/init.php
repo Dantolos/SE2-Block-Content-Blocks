@@ -69,16 +69,7 @@ function se2_content_blocks_cgb_block_assets() { // phpcs:ignore
 		]
 	);
 
-	/**
-	 * Register Gutenberg block on server-side.
-	 *
-	 * Register the block on server-side to ensure that the block
-	 * scripts and styles for both frontend and backend are
-	 * enqueued when the editor loads.
-	 *
-	 * @link https://wordpress.org/gutenberg/handbook/blocks/writing-your-first-block-type#enqueuing-block-scripts
-	 * @since 1.16.0
-	 */
+
 	register_block_type(
 		'se2/block-speaker', array(
 			// Enqueue blocks.style.build.css on both frontend & backend.
@@ -106,7 +97,7 @@ function se2_content_blocks_cgb_block_assets() { // phpcs:ignore
 	);
 
 	register_block_type(
-		'se2/block-sessions', array(
+		'se2/block-session', array(
 			// Enqueue blocks.style.build.css on both frontend & backend.
 			'style'         => 'se2_content_blocks-cgb-style-css',
 			// Enqueue blocks.build.js in the editor only.
@@ -162,7 +153,7 @@ function simplevent_events_render( $selectedEvent ){
 		$introtext = str_replace( $tagEliminations, '', $introtext ); 
 		$introtext_length = strpos( $introtext , '.', 200 ) + 1;
 		
-		$eventCard .= '<div class="event-card ">';
+		$eventCard .= '<div class="event-card">';
 			$eventCard .= '<div class="event-keyvisual" style="background-image: url(' .get_field('keyvisual', $eventID) .');"></div>';
 			$eventCard .= '<h3>'.get_field('titel', $eventID).'</h3>';
 			$eventCard .= '<h5>'.SE2\Supports\Date\Date_Format::formating_Date_Language(get_field('eckdaten', $eventID)['date'], 'date').'</h5>';
@@ -186,8 +177,49 @@ function simplevent_events_render( $selectedEvent ){
 	return $eventCard;
 }
 
-function simplevent_session_render(){
-	return true;
+function simplevent_session_render( $SessionSettings ){
+	$sessionCard = '';
+
+	if($SessionSettings['selectedSession']){
+		$sessionID = $SessionSettings['selectedSession'];
+
+		$sessionCard .= '<section class="session-card session-lb-trigger" sessionid="'.$sessionID.'">';
+
+				/* SESSION IMAGE */
+				$sessionCard .= '<div class="session-keyvisual" style="';
+					$sessionCard .= 'background-image:url('.get_field('session_bild', $sessionID).');';
+					$sessionCard .= 'height:'.$SessionSettings['sessionStyle']['image']['height'].';';
+					$sessionCard .= 'border-radius:'.$SessionSettings['sessionStyle']['image']['borderRadius']['top'].' '.$SessionSettings['sessionStyle']['image']['borderRadius']['right'].' '.$SessionSettings['sessionStyle']['image']['borderRadius']['bottom'].' '.$SessionSettings['sessionStyle']['image']['borderRadius']['left'].';';
+				$sessionCard .= '">'; 
+				$sessionCard .= '</div>';
+
+				/* SESSION CONTENT */
+				$sessionCard .= '<div class="session-content" style="';
+					$sessionCard .= 'padding:'.$SessionSettings['sessionStyle']['content']['padding']['top'].' '.$SessionSettings['sessionStyle']['content']['padding']['right'].' '.$SessionSettings['sessionStyle']['content']['padding']['bottom'].' '.$SessionSettings['sessionStyle']['content']['padding']['left'].';';
+				$sessionCard .= '">'; 
+				
+					$sessionCard .= '<h4 style="font-size:'. $SessionSettings['sessionStyle']['title']['fontSize'] .' !important;">';
+					$sessionCard .= get_field('titel', $sessionID);
+					$sessionCard .= '</h4>';
+
+					$sessionText = get_field('session_text', $sessionID);
+					$sessionEx = str_replace( '<h3>', '<b>', $sessionText ); 
+					$sessionEx = str_replace( '</h3>', '</b><br />', $sessionEx ); 
+					$sessionEx = str_replace( '<i>', '', $sessionEx ); 
+					$sessionEx = str_replace( '</i>', '', $sessionEx ); 
+					$tagEliminations = array("<p>", "</p>", '<div>', '</div>');
+					$sessionEx = str_replace( $tagEliminations, '', $sessionEx ); 
+					$sessionEx_length = (str_contains( $sessionEx , '.' )) ? strpos( $sessionEx , '.', 150 ) + 1 : 1;
+					if( $sessionEx_length < 20 ){
+						$sessionEx_length = (str_contains( $sessionEx , '?' )) ? strpos( $sessionEx , '?', 150 ) + 1 : 1;
+					}
+					$sessionCard .= '<p>'.substr( $sessionEx, 0, $sessionEx_length ).' <span class="primary-txt"> ...more</span></p>';
+					
+				$sessionCard .= '</div>';
+				
+		$sessionCard .= '</section>';
+}
+	return $sessionCard;
 }
 
 // Hook: Block assets.

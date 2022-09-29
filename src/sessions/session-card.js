@@ -1,65 +1,72 @@
-import React, { Component, useState } from 'react'
-import apiFetch from '@wordpress/api-fetch';
+import React, { useState, useEffect } from 'react'
+import { useSessionStyle } from './session-style-context';
+import { useSessionGeneral } from './session-general-context';
+
+import  TagCloud from '../components/tag-cloud';
+
+export default function SessionCard(props) {
+
+    const sessionStyle = useSessionStyle()
+    const [ style, setStyle ] = useState({ sessionStyle });
+
+    const sessionGeneral = useSessionGeneral();
+    const [ general, setGeneral ] = useState({ sessionGeneral });
 
 
-export default class SessionCard extends Component {
-    constructor(props){
-        super(props)
-        this.state = { 
-            sessiondata : this.props.sessiondata, 
-            appaereancestyle : this.props.appaereancestyle 
-        } 
-    }
+    useEffect( () => {
+        console.log('CARD UPDATE: , ', sessionStyle)
+        console.log(props.sessiondata)
+    } );
+    
 
-    componentDidUpdate(prevProps){
-        if( this.props.sessiondata != prevProps.sessiondata || this.props.appaereancestyle != prevProps.appaereancestyle ){
-            this.setState({ 
-                sessiondata : this.props.sessiondata,
-                appaereancestyle : this.props.appaereancestyle
-            }) 
-            
-        }
-        
-    }
+    return (
+        <div class="session-card">
+        { props.sessiondata &&
+            <div>
 
-    sessionContent(){
-        var fullText = this.state.sessiondata.acf.session_text
-        var shortText = fullText.substring(0, 250).concat('...')
-        return shortText;
-    }
-
-    render(){
-        console.log(this.props.appaereancestyle)
-        return (
-            <div class="session-card">
-                { this.state.sessiondata &&
-                    <div>
-        
-                        {/* SESSION IMAGE */}
-                        <div 
-                            class="session-keyvisual" 
-                            style={{
-                                backgroundImage: `url( ${this.state.sessiondata.acf.session_bild} )`, 
-                                height:   this.state.appaereancestyle.image.height,
-                                borderRadius:  this.state.appaereancestyle.image.borderRadius.top +' '+ this.state.appaereancestyle.image.borderRadius.right +' '+ this.state.appaereancestyle.image.borderRadius.bottom +' '+ this.state.appaereancestyle.image.borderRadius.left,
-                             
-                            }}>
-                        </div>
-                        <div 
-                            class="session-content"
-                            style={{
-                                padding: this.state.appaereancestyle.content.padding.top +' '+ this.state.appaereancestyle.content.padding.right +' '+ this.state.appaereancestyle.content.padding.bottom +' '+ this.state.appaereancestyle.content.padding.left
-                            }}
-                            >
-                            <h3 style={{fontSize: this.state.appaereancestyle.title.fontSize }}>
-                                { this.state.sessiondata.acf.titel }
-                            </h3>
-                            <p>{ this.sessionContent() }</p>
-                        </div>
+                {/* SESSION IMAGE */}
+                { sessionGeneral.general.views.headerImage && 
+                    <div 
+                        class="session-keyvisual" 
+                        style={{
+                            backgroundImage: `url( ${props.sessiondata.acf.session_bild} )`, 
+                            height:  sessionStyle.style.image.height,
+                            borderRadius:  sessionStyle.style.image.borderRadius.top +' '+ sessionStyle.style.image.borderRadius.right +' '+ sessionStyle.style.image.borderRadius.bottom +' '+ sessionStyle.style.image.borderRadius.left,
                         
-                    </div> 
-                }
-            </div>
-        )
-    }
+                        }}>
+                    </div>
+                } 
+
+                {/* SESSION CONTENT */}
+                <div 
+                    class="session-content"
+                    style={{
+                        padding: sessionStyle.style.content.padding.top +' '+ sessionStyle.style.content.padding.right +' '+ sessionStyle.style.content.padding.bottom +' '+ sessionStyle.style.content.padding.left
+                    }}
+                    >
+                    <h3 style={{fontSize: sessionStyle.style.title.fontSize }}>
+                        { props.sessiondata.acf.titel }
+                    </h3>
+
+                    { sessionGeneral.general.views.description &&
+                        <p>{ sessionContent(props.sessiondata.acf.session_text) }</p>
+                    }
+
+                 
+                        <TagCloud tagType='speaker' tagData={ props.sessiondata.acf.referenten } />                        
+                    
+
+                </div>
+                
+            </div> 
+        }
+        </div>
+    );    
 }
+
+
+function sessionContent(fullText){
+    var shortText = fullText.substring(0, 250).concat('...')
+    return shortText;
+}
+

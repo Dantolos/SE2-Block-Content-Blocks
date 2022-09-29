@@ -8,32 +8,23 @@
 //  Import CSS.
 import './editor.scss';
 import './style.scss';
+import { useState, useEffect, useRef } from "@wordpress/element";
 
 const { __ } = wp.i18n; // Import __() from wp.i18n
 const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.blocks
-const {
-    RichText,
-    InspectorControls,
-    ColorPalette
-    
-} = wp.blockEditor;
+const { InspectorControls } = wp.blockEditor;
 const {
     PanelBody,
     TabPanel,
-    ColorPicker,
-    SelectControl,
-    Button,
-    RangeControl,
-    GradientPicker,
-    Spinner,
-    FontSizePicker
+    Spinner
 } = wp.components;
 
+import { SessionStyleProvider } from './session-style-context';
+import { SessionGeneralProvider } from './session-general-context';
 
 import SessionCard from './session-card';
-
-import { __experimentalUnitControl as UnitControl } from '@wordpress/components';
-import { __experimentalBoxControl as BoxControl } from '@wordpress/components';
+import SessionStyleSettings from './session-style-settings';
+import SessionGeneralSettings from './session-general-settings';
 
 
 registerBlockType('se2/block-session', {
@@ -48,7 +39,7 @@ registerBlockType('se2/block-session', {
 		</svg>,
 	},
 	category: 'se2', 
-	keywords: [ 'se2', 'session', 'labs'	],
+	keywords: [ 'se2', 'session', 'labs' ],
 	attributes: {
 		sessions: {
 			type: 'object',
@@ -60,6 +51,9 @@ registerBlockType('se2/block-session', {
 			type: 'object'
 		},
         sessionStyle: {
+            type: 'object'
+        },
+        sessionGeneral: {
             type: 'object'
         }
 	},
@@ -79,10 +73,20 @@ registerBlockType('se2/block-session', {
                                     fontSize:  '' 
                                 }
                             };
-       
-        props.setAttributes({sessionStyle: sessionStyle})
 
-        const { attributes } = props;
+        let sessionGeneral = props.attributes.sessionGeneral ? props.attributes.sessionGeneral 
+                            : {
+                                views: {
+                                    headerImage: true,
+                                    description: true
+                                },
+                                
+                            };
+       
+        props.setAttributes({sessionStyle: sessionStyle, sessionGeneral: sessionGeneral})
+    
+         
+
 		//Session fetching
 		if (!props.attributes.sessions) {
 			wp.apiFetch({
@@ -90,8 +94,7 @@ registerBlockType('se2/block-session', {
 			}).then(sessions => {
 				props.setAttributes({
 					sessions: sessions
-				})
-				
+				}) 
 			})
 		}
 
@@ -116,128 +119,115 @@ registerBlockType('se2/block-session', {
 			})
 		}
 
-		function message(msg){
-           
+		function message(msg){ 
 			return (
 				<div class="speaker-backend-msg">
-					{/* <div class="speaker-image-placeholder"></div> */}
                     <Spinner />
 					<h5>{msg}</h5>
 				</div>
 			)
 		}
 
+        //change style properties
         function changeStyle( target, key, value ) {
             sessionStyle[target][key] = value;          
 			props.setAttributes({
 				sessionStyle: sessionStyle
 			})
+            console.log('HANDLED new attr: ', props.attributes.sessionStyle )
 		}
+
+        //change block settings
+        function changeGeneral( target, key, value ) {
+            sessionGeneral[target][key] = value;          
+			props.setAttributes({
+				sessionGeneral: sessionGeneral
+			})
+            console.log('HANDLED new attr: ', props.attributes.sessionGeneral)
+		}
+
+
 
 		return (
             <div>
-                {/* SETTING PANEL */}
-                <InspectorControls style={{ marginBottom: '40px' }} >
+            <SessionStyleProvider 
+                sessionStyle={props.attributes.sessionStyle} 
+                styleHandler={changeStyle}  
+                >
+                <SessionGeneralProvider 
+                    sessionGeneral={props.attributes.sessionGeneral} 
+                    generalHandler={changeGeneral}
+                    >
 
-                    {/* Appearance */}
-                    
-                        <TabPanel
-                            className="se2-tab-panel"
-                            activeClass="active-tab"
-                            orientation="horizontal"
-                            initialTabName="appearance"
-                            onSelect={ (tabName) => console.log( 'Selecting tab', tabName ) }
-                            tabs={ [
+                    {/* SETTING PANEL */}
+                    <InspectorControls style={{ marginBottom: '40px' }}>
+                            
+                            <TabPanel
+                                className="se2-tab-panel"
+                                activeClass="active-tab"
+                                orientation="horizontal"
+                                initialTabName="appearance"
+                                onSelect={ (tabName) => console.log( 'Selecting tab', tabName ) }
+                                tabs={ [
+                                    {
+                                        name: 'appearance',
+                                        title: 'Appearance',
+                                        className: 'tab-appearance',
+                                    },
+                                    {
+                                        name: 'general',
+                                        title: 'General',
+                                        className: 'tab-general',
+                                    },
+                                ] }>
                                 {
-                                    name: 'appearance',
-                                    title: 'Appearance',
-                                    className: 'tab-appearance',
-                                },
+                                ( tab ) => (
+                                    <div class="se2-tab-content">
+                                        
+                                        {   /* Appearance */
+                                                tab.name === 'appearance' &&
+                                                
+                                                <SessionStyleSettings />
+                                        }
+                                        {   /* Settings */
+                                                tab.name === 'general' &&
+                                                
+                                                <fragment>
+                                                    <SessionGeneralSettings />
+                                                </fragment>
+                                        }
+                                    </div>
+                                )
+                                }
+                            </TabPanel>
+            
+                    </InspectorControls>
+
+                    {/* BACKEND */}
+                    <div className={props.className}>
+
+                        {/* BACKEND: Mouseover Settings */}
+                        <div class="speaker-backend-settings">
+                            <select class="speaker-selection" onChange={updateSession} value={props.attributes.selectedSession}>
                                 {
-                                    name: 'tab2',
-                                    title: 'Tab 2',
-                                    className: 'tab-two',
-                                },
-                            ] }>
-                            {
-                            ( tab ) => (
-                                <div class="se2-tab-content">
-                                    
-                                    {   /* Appearance */
-                                            tab.name === 'appearance' &&
-                                            <fragment>
-                                                <PanelBody title={'Image'} initialOpen={false} >
-                                                    <UnitControl 
-                                                        label= 'Image Height'
-                                                        value={ props.attributes.sessionStyle.image.height }
-                                                        onChange={ (value) => { changeStyle( 'image', 'height', value )  }} 
-                                                        style={{width: '25%'}}
-                                                        labelPosition= 'top'
-                                                    />
-                                                    <BoxControl 
-                                                        label="Border Radius" 
-                                                        values={props.attributes.sessionStyle.image.borderRadius} 
-                                                        onChange={ (value) => { changeStyle( 'image', 'borderRadius', value )  }}
-                                                        style={{ width: '48%', float: 'left', margin: '10px 1%' }} 
-                                                    />
+                                    props.attributes.sessions.map(session => {
+                                        return (
+                                            <option value={session.id}>{session.title.rendered}</option>
+                                        )
+                                    })
+                                }
+                            </select>
+                        </div>
+                            
+                        {/* BACKEND: Preview */}
+                        { props.attributes.selectedSession && 
+                            <SessionCard sessiondata={props.attributes.sessionDataTrans} />
+                        }
 
-                                                </PanelBody>
-                                                <PanelBody title={'Content'} initialOpen={false} >
-                                                    
-                                                    <BoxControl 
-                                                        label="Padding" 
-                                                        values={props.attributes.sessionStyle.content.padding} 
-                                                        onChange={ (value) => { changeStyle( 'content', 'padding', value )  }}
-                                                        style={{ width: '48%', float: 'left', margin: '10px 1%' }} 
-                                                    />
-
-                                                    <FontSizePicker
-                                                        fontSizes={[
-                                                            {
-                                                                name: __( 'Small' ),
-                                                                slug: 'small',
-                                                                size: 12,
-                                                            },
-                                                            {
-                                                                name: __( 'Big' ),
-                                                                slug: 'big',
-                                                                size: 26,
-                                                            },
-                                                        ]}
-                                                        value={ props.attributes.sessionStyle.title.fontSize }
-                                                        fallbackFontSize={ 26 }
-                                                        onChange={ (value) => { changeStyle( 'title', 'fontSize', value )  }}
-                                                        withSlider
-                                                    />
-
-                                                </PanelBody>
-                                            </fragment>
-                                    }
-                                </div>
-                            )
-                            }
-                        </TabPanel>
-        
-                </InspectorControls>
-
-
-                <div className={props.className}>
-                    <div class="speaker-backend-settings">
-                        <select class="speaker-selection" onChange={updateSession} value={props.attributes.selectedSession}>
-                            {
-                                props.attributes.sessions.map(session => {
-                                    return (
-                                        <option value={session.id}>{session.title.rendered}</option>
-                                    )
-                                })
-                            }
-                        </select>
                     </div>
 
-                    { props.attributes.selectedSession &&
-                        <SessionCard sessiondata={props.attributes.sessionDataTrans} appaereancestyle={props.attributes.sessionStyle} />
-                    }
-                </div>
+                    </SessionGeneralProvider>
+                </SessionStyleProvider>
             </div>
 		);
 	},

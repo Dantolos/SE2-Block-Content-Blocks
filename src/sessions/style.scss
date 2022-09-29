@@ -13,6 +13,10 @@
     padding: 2rem;
 }
 .session-card {
+    cursor: pointer;
+    &:hover {
+       filter: brightness(.95) saturate(.8);
+    }
     .session-keyvisual{
         width:100%;
         height:80px;

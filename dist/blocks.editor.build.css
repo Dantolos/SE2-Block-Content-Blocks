@@ -100,7 +100,8 @@
   min-height: 200px; }
   .wp-block-se2-block-session:hover .speaker-backend-settings {
     opacity: 1;
-    top: 20px; }
+    top: 20px;
+    z-index: 50; }
   .wp-block-se2-block-session .speaker-backend-settings {
     opacity: 0;
     width: 80%;
@@ -120,6 +121,18 @@
   border-bottom: solid 20px #00f692; }
   .se2-tab-panel .se2-tab-content {
     border-bottom: solid 1px #0a0a0a; }
+
+.se2-checkbox-list .se2-checkbox-list-element:first-of-type {
+  margin-top: 10px; }
+
+.se2-checkbox-list .se2-checkbox-list-element {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: center;
+      align-items: center;
+  margin-bottom: 5px; }
+  .se2-checkbox-list .se2-checkbox-list-element label {
+    margin-left: 20px; }
 
 .speaker-backend-msg {
   min-height: 150px;
