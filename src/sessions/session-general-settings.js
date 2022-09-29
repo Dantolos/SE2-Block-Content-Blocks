@@ -1,14 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { useSessionGeneral, useSessionGeneralUpdate } from './session-general-context';
 
-
 const {
     PanelBody,
     FormToggle
 } = wp.components;
-import { __experimentalUnitControl as UnitControl } from '@wordpress/components';
-import { __experimentalBoxControl as BoxControl } from '@wordpress/components';
-
 
 //const sessionGeneral = useSessionGeneral()
 export default function SessionGeneralSettings() {
@@ -27,6 +23,7 @@ export default function SessionGeneralSettings() {
         <fragment>
             {/* View */}
             <PanelBody title={'View'} initialOpen={true} >
+            
                 <div class="se2-checkbox-list">
                     <label style={{margin: '4px 0'}}><i>Show/Hide content elements</i></label>
 

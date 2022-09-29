@@ -5,15 +5,19 @@ export default function TagCloud(props) {
     
     const tagArray = props.tagData
 
-    useEffect(()=> console.log('TAGCLOUD: ', props))
+    useEffect(()=> console.log('TAGCLOUD: ', tagArray))
+
+    const castSpeaker = props.tagData.map( speakerData => {
+        return (
+            <SpeakerTag speakerData={speakerData}></SpeakerTag>
+        )
+    } )
 
     return (
-        <div>
-        { props.tagType === 'speaker' &&
-            tagArray.map(speakerData => {
-                <SpeakerTag speakerData={speakerData} />
-            })
-        }
+        <div> 
+            { props.tagType === 'speaker' && 
+                castSpeaker 
+            }
         </div>
     )
     

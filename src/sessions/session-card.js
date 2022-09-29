@@ -49,11 +49,11 @@ export default function SessionCard(props) {
                     </h3>
 
                     { sessionGeneral.general.views.description &&
-                        <p>{ sessionContent(props.sessiondata.acf.session_text) }</p>
+                        <p>{ sessionContent( props.sessiondata.acf.session_text ) }</p>
                     }
 
                  
-                        <TagCloud tagType='speaker' tagData={ props.sessiondata.acf.referenten } />                        
+                        <TagCloud tagType="speaker" tagData={ props.sessiondata.acf.referenten } />                        
                     
 
                 </div>
